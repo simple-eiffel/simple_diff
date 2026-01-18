@@ -15,12 +15,12 @@ feature {NONE} -- Initialization
 	make
 			-- Create renderer with default settings.
 		do
-			tab_width := 4
-			line_width := 80
+			tab_width := Default_tab_width
+			line_width := Default_line_width
 			use_color := False
 		ensure
-			default_tab: tab_width = 4
-			default_width: line_width = 80
+			default_tab: tab_width = Default_tab_width
+			default_width: line_width = Default_line_width
 			no_color: not use_color
 		end
 
@@ -347,6 +347,14 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature {NONE} -- Constants
+
+	Default_tab_width: INTEGER = 4
+			-- Default width to expand tabs to
+
+	Default_line_width: INTEGER = 80
+			-- Default maximum line width for side-by-side
 
 feature {NONE} -- ANSI Colors
 

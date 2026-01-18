@@ -15,12 +15,12 @@ feature {NONE} -- Initialization
 	make
 			-- Create diff facade with default settings.
 		do
-			context_lines := 3
+			context_lines := Default_context_lines
 			ignore_whitespace := False
 			ignore_case := False
 			create engine.make
 		ensure
-			default_context: context_lines = 3
+			default_context: context_lines = Default_context_lines
 			no_whitespace_ignore: not ignore_whitespace
 			no_case_ignore: not ignore_case
 		end
@@ -153,15 +153,15 @@ feature -- Directory diffing
 			-- Build set of all files
 			create l_all_files.make (l_source_files.count + l_target_files.count)
 			from i := 1 until i > l_source_files.count loop
-				l_all_files.put (1, l_source_files [i])  -- 1 = in source
+				l_all_files.put (File_in_source_only, l_source_files [i])
 				i := i + 1
 			end
 			from i := 1 until i > l_target_files.count loop
 				l_filename := l_target_files [i]
 				if l_all_files.has (l_filename) then
-					l_all_files.replace (3, l_filename)  -- 3 = in both
+					l_all_files.replace (File_in_both, l_filename)
 				else
-					l_all_files.put (2, l_filename)  -- 2 = in target only
+					l_all_files.put (File_in_target_only, l_filename)
 				end
 				i := i + 1
 			end
@@ -173,20 +173,20 @@ feature -- Directory diffing
 				l_source_path := a_source_dir + l_sep + l_filename
 				l_target_path := a_target_dir + l_sep + l_filename
 				inspect l_value
-				when 1 then
+				when File_in_source_only then
 					-- File only in source (deleted)
 					l_diff := diff_strings (read_file (l_source_path), "")
 					l_diff.set_source_path (l_source_path)
 					l_diff.set_target_path (l_target_path)
 					Result.extend (l_diff)
-				when 2 then
+				when File_in_target_only then
 					-- File only in target (added)
 					l_diff := diff_strings ("", read_file (l_target_path))
 					l_diff.set_source_path (l_source_path)
 					l_diff.set_target_path (l_target_path)
 					Result.extend (l_diff)
-				when 3 then
-					-- File in both
+				when File_in_both then
+					-- File in both directories
 					l_diff := diff_files (l_source_path, l_target_path)
 					if l_diff.has_changes then
 						Result.extend (l_diff)
@@ -379,6 +379,20 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature {NONE} -- Constants
+
+	Default_context_lines: INTEGER = 3
+			-- Default number of context lines in unified diff
+
+	File_in_source_only: INTEGER = 1
+			-- File exists only in source directory
+
+	File_in_target_only: INTEGER = 2
+			-- File exists only in target directory
+
+	File_in_both: INTEGER = 3
+			-- File exists in both directories
 
 invariant
 	context_lines_non_negative: context_lines >= 0

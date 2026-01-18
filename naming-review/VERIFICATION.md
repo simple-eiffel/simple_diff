@@ -16,11 +16,12 @@
 |----------|-------------|
 | Class renames | 0 |
 | Feature renames | 0 |
-| Constant fixes | 1 |
+| Constant naming fixes | 1 |
+| Magic number fixes | 7 |
 | Argument fixes | 0 |
 | Local/cursor fixes | 1 |
 | Contract tag fixes | 0 |
-| **TOTAL** | **2** |
+| **TOTAL** | **9** |
 
 ## Fixes Applied
 
@@ -50,17 +51,68 @@ across 1 |..| source_lines.count as ic all
 end
 ```
 
+### 3. Magic Numbers: SIMPLE_DIFF
+**File**: src/simple_diff.e
+
+Added class-scoped constants:
+```eiffel
+feature {NONE} -- Constants
+
+    Default_context_lines: INTEGER = 3
+            -- Default number of context lines in unified diff
+
+    File_in_source_only: INTEGER = 1
+            -- File exists only in source directory
+
+    File_in_target_only: INTEGER = 2
+            -- File exists only in target directory
+
+    File_in_both: INTEGER = 3
+            -- File exists in both directories
+```
+
+Updated usages in `make` and `diff_directories` to use named constants.
+
+### 4. Magic Numbers: DIFF_ENGINE
+**File**: src/diff_engine.e
+
+Added class-scoped constant:
+```eiffel
+Default_context_size: INTEGER = 3
+        -- Default number of context lines around changes
+```
+
+Updated `make` and postcondition to use `Default_context_size`.
+
+### 5. Magic Numbers: DIFF_RENDERER
+**File**: src/diff_renderer.e
+
+Added class-scoped constants:
+```eiffel
+Default_tab_width: INTEGER = 4
+        -- Default width to expand tabs to
+
+Default_line_width: INTEGER = 80
+        -- Default maximum line width for side-by-side
+```
+
+Updated `make` and postconditions to use named constants.
+
 ## Files Modified
 
-- `src/simple_diff.e` (1 change)
-- `src/diff_engine.e` (1 change)
+- `src/simple_diff.e` (5 changes: Version naming + 4 magic number constants)
+- `src/diff_engine.e` (3 changes: cursor naming + 2 magic number fixes)
+- `src/diff_renderer.e` (4 changes: 2 constants added + 2 usages updated)
 
 ## Assessment
 
 **simple_diff now fully complies with Eiffel naming conventions** as defined in:
 `D:\prod\reference_docs\claude\NAMING_CONVENTIONS.md`
 
-The codebase was exceptionally clean to begin with, requiring only 2 minor fixes.
+All magic numbers have been replaced with semantically named constants that:
+- Explain the meaning of the value in context
+- Enable easy modification of defaults
+- Follow Initial_cap naming convention
 
 ## Verification Commands
 

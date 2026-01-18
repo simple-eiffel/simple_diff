@@ -17,11 +17,11 @@ feature {NONE} -- Initialization
 		do
 			create source_lines.make (100)
 			create target_lines.make (100)
-			context_size := 3
+			context_size := Default_context_size
 		ensure
 			source_empty: source_lines.is_empty
 			target_empty: target_lines.is_empty
-			default_context: context_size = 3
+			default_context: context_size = Default_context_size
 		end
 
 feature -- Access
@@ -369,6 +369,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Constants
+
+	Default_context_size: INTEGER = 3
+			-- Default number of context lines around changes
 
 	Op_match: INTEGER = 0
 	Op_insert: INTEGER = 1
