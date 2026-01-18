@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="simple_diff" uuid="2fc42889-b253-44f5-87cf-62873305e79e" library_target="simple_diff">
+	<description>simple_diff library</description>
+	<target name="simple_diff">
+		<root all_classes="true"/>
+		<version major="0" minor="0" release="1" build="1"/>
+		<option warning="warning" manifest_array_type="mismatch_warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<capability>
+			<concurrency support="scoop"/>
+			<void_safety support="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<library name="time" location="$ISE_LIBRARY/library/time/time.ecf"/>
+		<cluster name="src" location="./src/" recursive="true">
+			<file_rule>
+				<exclude>/.git$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="simple_diff_tests" extends="simple_diff">
+		<description>Test target for simple_diff</description>
+		<root class="TEST_APP" feature="make"/>
+		<library name="testing" location="$ISE_LIBRARY/library/testing/testing.ecf"/>
+		<library name="simple_testing" location="D:\prod\simple_testing\simple_testing.ecf"/>
+		<cluster name="tests" location="./testing/" recursive="true"/>
+	</target>
+</system>
