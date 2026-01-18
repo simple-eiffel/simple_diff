@@ -36,7 +36,7 @@ feature -- Access
 	ignore_case: BOOLEAN
 			-- Whether to ignore case differences
 
-	version: STRING = "1.0.0"
+	Version: STRING = "1.0.0"
 			-- Library version
 
 feature -- Settings (Builder pattern)

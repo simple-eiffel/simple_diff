@@ -108,8 +108,8 @@ feature -- Computation
 		ensure
 			result_not_void: Result /= Void
 			identical_if_same: source_lines.count = target_lines.count and then
-				(across 1 |..| source_lines.count as i all
-					source_lines [i.item].same_string (target_lines [i.item])
+				(across 1 |..| source_lines.count as ic all
+					source_lines [ic.item].same_string (target_lines [ic.item])
 				end) implies Result.is_identical
 		end
 
