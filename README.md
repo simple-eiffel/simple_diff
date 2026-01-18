@@ -1,15 +1,19 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/simple-eiffel/claude_eiffel_op_docs/main/artwork/LOGO.png" alt="simple_ library logo" width="400">
+  <img src="docs/images/logo.png" alt="simple_diff logo" width="200">
 </p>
 
-# simple_diff
+<h1 align="center">simple_diff</h1>
 
-**[Documentation](https://simple-eiffel.github.io/simple_diff/)** | **[GitHub](https://github.com/simple-eiffel/simple_diff)**
+<p align="center">
+  <a href="https://simple-eiffel.github.io/simple_diff/">Documentation</a> •
+  <a href="https://github.com/simple-eiffel/simple_diff">GitHub</a>
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Eiffel](https://img.shields.io/badge/Eiffel-25.02-blue.svg)](https://www.eiffel.org/)
-[![Design by Contract](https://img.shields.io/badge/DbC-enforced-orange.svg)]()
-[![Built with simple_codegen](https://img.shields.io/badge/Built_with-simple__codegen-blueviolet.svg)](https://github.com/simple-eiffel/simple_code)
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
+  <img src="https://img.shields.io/badge/Eiffel-25.02-purple.svg" alt="Eiffel 25.02">
+  <img src="https://img.shields.io/badge/DBC-Contracts-green.svg" alt="Design by Contract">
+</p>
 
 Text differencing library implementing Myers diff algorithm. Compares strings, files, and directories with support for unified diff, side-by-side, HTML output, and patch application.
 
@@ -17,7 +21,11 @@ Part of the [Simple Eiffel](https://github.com/simple-eiffel) ecosystem.
 
 ## Status
 
-**Phase 1** - Core functionality complete (29 tests passing)
+✅ **Production Ready** — v1.0.0
+- 7 classes, 29 tests passing
+- Myers diff algorithm implementation
+- Full Design by Contract coverage
+- Multiple output formats (unified, side-by-side, HTML)
 
 ## Overview
 
@@ -157,4 +165,8 @@ end
 
 ## License
 
-MIT License - Copyright (c) 2024-2025, Larry Rix
+MIT License - see [LICENSE](LICENSE) file.
+
+---
+
+Part of the [Simple Eiffel](https://github.com/simple-eiffel) ecosystem.

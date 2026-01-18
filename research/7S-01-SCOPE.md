@@ -1,0 +1,172 @@
+# 7S-01-SCOPE: simple_diff (Retrospective)
+
+## Research Context
+This is a **retrospective analysis** of what scope research would have revealed prior to building simple_diff.
+
+---
+
+## PROBLEM DEFINITION
+
+### What Problem Are We Solving?
+
+**Problem Statement**: Eiffel developers need a way to compute and represent differences between text sources, apply patches, and generate various output formats, without external dependencies.
+
+### Why Is This Problem Worth Solving?
+
+1. **No Eiffel-native diff library exists** - Developers must shell out to external tools
+2. **Integration friction** - External tools don't produce Eiffel-friendly data structures
+3. **Contract-less operations** - External tools lack DBC guarantees
+4. **Format limitations** - Standard diff only outputs unified format
+
+### Who Experiences This Problem?
+
+| User Segment | Pain Point |
+|--------------|------------|
+| Library authors | Need to show code changes in documentation |
+| Tool builders | Building merge/patch tools needs diff capability |
+| Test frameworks | Comparing expected vs actual outputs |
+| Version control integrations | Eiffel-native VCS tools |
+
+### Current Workarounds
+
+1. **Shell to `diff` command** - OS-dependent, parsing overhead
+2. **Shell to `git diff`** - Requires git installation
+3. **Manual string comparison** - No structure, poor UX
+4. **External library via C** - Complex integration
+
+---
+
+## SCOPE DEFINITION
+
+### In Scope
+
+| Feature | Priority | Rationale |
+|---------|----------|-----------|
+| String-to-string diff | MUST | Core use case |
+| File-to-file diff | MUST | Most common scenario |
+| Unified diff format | MUST | Industry standard |
+| Multiple output formats | SHOULD | Flexibility |
+| Patch application | SHOULD | Complete diff/patch cycle |
+| Directory diff | COULD | Extended use case |
+
+### Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Binary file diff | Complexity, different algorithm needed |
+| Three-way merge | Separate library concern |
+| Semantic diff (syntax-aware) | Language-specific, too specialized |
+| Remote file diffing | Network concerns separate |
+| Real-time streaming diff | Different architecture needed |
+
+### Minimum Viable Product (MVP)
+
+```
+MVP = diff_strings + diff_files + to_unified + apply_patch
+```
+
+### Success Criteria
+
+| Criterion | Measurement | Target |
+|-----------|-------------|--------|
+| Works for text | Can diff any text strings | 100% |
+| No dependencies | Only EiffelBase | True |
+| Correct output | Matches standard diff | True |
+| Good performance | < 5s for 10K lines | True |
+| Contract coverage | All public features | 100% |
+
+---
+
+## STAKEHOLDER ANALYSIS
+
+### Primary Stakeholders
+
+1. **Larry Rix** (ecosystem maintainer)
+   - Needs: Consistent API, DBC, SCOOP-safe
+   - Concern: Integration with simple_* ecosystem
+
+2. **Eiffel developers**
+   - Needs: Simple API, reliable results
+   - Concern: Learning curve, documentation
+
+### Secondary Stakeholders
+
+1. **Tool builders**
+   - Needs: Programmatic access to diff results
+   - Concern: Flexible output formats
+
+2. **Test framework users**
+   - Needs: Clear diff display for failures
+   - Concern: Performance for large outputs
+
+---
+
+## CONSTRAINTS
+
+### Technical Constraints
+
+| Constraint | Impact |
+|------------|--------|
+| Pure Eiffel | No C externals |
+| Void-safe | All code must be void-safe |
+| SCOOP-compatible | No shared mutable state |
+| EiffelBase only | No third-party dependencies |
+
+### Business Constraints
+
+| Constraint | Impact |
+|------------|--------|
+| Solo developer | Limited time/resources |
+| Open source | MIT license |
+| Phase-based | Must follow 6-phase lifecycle |
+
+---
+
+## ASSUMPTIONS
+
+| Assumption | Risk if Wrong |
+|------------|---------------|
+| Text is line-based | Binary files will fail |
+| UTF-8/ASCII encoding | Unicode issues possible |
+| Files fit in memory | Large files will fail |
+| Myers algorithm sufficient | May need other algorithms |
+
+---
+
+## QUESTIONS TO ANSWER
+
+| Question | Answer (from implementation) |
+|----------|------------------------------|
+| What algorithm? | Myers (LCS-based) |
+| What formats? | Unified, side-by-side, HTML, colored |
+| Patch support? | Yes, with reverse and dry-run |
+| Error handling? | has_error/last_error pattern |
+
+---
+
+## RETROSPECTIVE VALIDATION
+
+### Scope Decisions Were Sound
+
+✓ Core features (string/file diff, unified format) correctly prioritized
+✓ Patch application included - completes the diff/patch cycle
+✓ Directory diff included as COULD - proper prioritization
+✓ Binary diff excluded - correct decision
+
+### Scope Creep Avoided
+
+The implementation stayed focused on text differencing without trying to solve:
+- Merge conflicts
+- Syntax-aware diffing
+- Network operations
+
+### Lessons Learned
+
+1. **MVP was correctly identified** - All MVP features shipped
+2. **Extensibility planned** - Multiple formats, renderer pattern
+3. **Constraints honored** - No external dependencies
+
+---
+
+*Retrospective scope analysis: 2026-01-18*
+*Generated by deep-research workflow 7S-01*

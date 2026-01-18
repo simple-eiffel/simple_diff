@@ -14,7 +14,6 @@
 			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<library name="time" location="$ISE_LIBRARY/library/time/time.ecf"/>
 		<cluster name="src" location="./src/" recursive="true">
 			<file_rule>
 				<exclude>/.git$</exclude>

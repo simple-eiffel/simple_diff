@@ -3,135 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>simple_diff - Eiffel Library Documentation</title>
-    <style>
-        :root { --primary: #2563eb; --secondary: #1e40af; --bg: #f8fafc; --text: #1e293b; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 3rem 2rem; text-align: center; }
-        header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .tagline { opacity: 0.9; font-size: 1.2rem; margin-bottom: 1rem; }
-        .badges { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
-        .badge { padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 500; }
-        .badge-version { background: #22c55e; }
-        .badge-license { background: #eab308; color: #1e293b; }
-        .badge-codegen { background: #8b5cf6; }
-        nav { background: white; border-bottom: 1px solid #e2e8f0; padding: 1rem; position: sticky; top: 0; z-index: 100; }
-        nav ul { list-style: none; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
-        nav a { color: var(--text); text-decoration: none; font-weight: 500; }
-        nav a:hover { color: var(--primary); }
-        main { max-width: 900px; margin: 0 auto; padding: 2rem; }
-        section { background: white; border-radius: 0.5rem; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        h2 { color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; }
-        h3 { margin: 1.5rem 0 0.75rem; }
-        pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 1rem 0; }
-        code { font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.9rem; }
-        .inline-code { background: #e2e8f0; padding: 0.125rem 0.375rem; border-radius: 0.25rem; color: var(--text); }
-        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #f1f5f9; font-weight: 600; }
-        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .feature-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; }
-        .feature-card h4 { color: var(--primary); margin-bottom: 0.5rem; }
-        footer { text-align: center; padding: 2rem; color: #64748b; border-top: 1px solid #e2e8f0; }
-        .keyword { color: #c084fc; }
-        .type { color: #22d3ee; }
-        .string { color: #4ade80; }
-        .comment { color: #64748b; }
-    </style>
+    <title>simple_diff - Text Differencing Library for Eiffel</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <h1>simple_diff</h1>
-        <p class="tagline"><!-- TODO: Add tagline --></p>
-        <div class="badges">
-            <span class="badge badge-version">v0.0.1</span>
-            <span class="badge badge-license">MIT</span>
-            <span class="badge badge-codegen">Built with simple_codegen</span>
+        <div class="container">
+            <img src="images/logo.png" alt="simple_diff logo" class="logo">
+            <h1>simple_diff</h1>
+            <p class="tagline">Text Differencing with Myers Algorithm</p>
+            <div class="badges">
+                <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License">
+                <img src="https://img.shields.io/badge/Eiffel-25.02-purple.svg" alt="Eiffel 25.02">
+                <img src="https://img.shields.io/badge/DBC-Contracts-green.svg" alt="Design by Contract">
+            </div>
         </div>
     </header>
 
     <nav>
-        <ul>
-            <li><a href="#overview">Overview</a></li>
-            <li><a href="#quick-start">Quick Start</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#api">API Reference</a></li>
-            <li><a href="https://github.com/simple-eiffel/simple_diff">GitHub</a></li>
-        </ul>
+        <div class="container">
+            <a href="#overview">Overview</a>
+            <a href="#quick-start">Quick Start</a>
+            <a href="#features">Features</a>
+            <a href="#api-reference">API Reference</a>
+            <a href="https://github.com/simple-eiffel/simple_diff">GitHub</a>
+        </div>
     </nav>
 
     <main>
-        <section id="overview">
-            <h2>Overview</h2>
-            <p>
-                <strong>simple_diff</strong> is part of the <strong>simple_*</strong> ecosystem
-                of focused, single-purpose Eiffel libraries with full Design by Contract support.
-            </p>
-            <!-- TODO: Add detailed description -->
-        </section>
+        <div class="container">
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>
+                    <strong>simple_diff</strong> is a text differencing library implementing the Myers diff algorithm.
+                    It provides a complete solution for comparing strings, files, and directories with support for
+                    multiple output formats including unified diff, side-by-side, HTML, and JSON.
+                </p>
+                <p>
+                    Part of the <a href="https://github.com/simple-eiffel">Simple Eiffel</a> ecosystem.
+                </p>
+            </section>
 
-        <section id="quick-start">
-            <h2>Quick Start</h2>
-            <h3>Installation</h3>
-            <p>Set environment variable and add to your ECF:</p>
-<pre><code><span class="comment">-- Set SIMPLE_EIFFEL=D:\prod</span>
-&lt;library name="simple_diff" location="$SIMPLE_EIFFEL/simple_diff/simple_diff.ecf"/&gt;</code></pre>
+            <section id="quick-start">
+                <h2>Quick Start</h2>
+                <h3>Basic String Diff</h3>
+<pre><code>local
+    l_diff: SIMPLE_DIFF
+    l_result: DIFF_RESULT
+do
+    create l_diff.make
+    l_result := l_diff.diff_strings ("hello%Nworld", "hello%Nearth")
 
-            <h3>Basic Usage</h3>
-<pre><code><span class="keyword">local</span>
-    l_obj: <span class="type">SIMPLE_DIFF</span>
-<span class="keyword">do</span>
-    <span class="keyword">create</span> l_obj.make
-    <span class="comment">-- TODO: Add example</span>
-<span class="keyword">end</span></code></pre>
-        </section>
+    if l_result.has_changes then
+        print (l_result.to_unified)  -- Unified diff output
+    end
+end</code></pre>
 
-        <section id="features">
-            <h2>Features</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h4>Design by Contract</h4>
-                    <p>Full preconditions, postconditions, and class invariants.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>Void Safety</h4>
-                    <p>Fully void-safe implementation with proper attached/detachable handling.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>SCOOP Compatible</h4>
-                    <p>Ready for concurrent programming with SCOOP.</p>
-                </div>
-                <!-- TODO: Add more feature cards -->
-            </div>
-        </section>
+                <h3>File Comparison</h3>
+<pre><code>local
+    l_diff: SIMPLE_DIFF
+    l_result: DIFF_RESULT
+do
+    create l_diff.make
+    l_result := l_diff.diff_files ("old_version.txt", "new_version.txt")
+    print (l_result.to_html)  -- HTML formatted diff
+end</code></pre>
 
-        <section id="api">
-            <h2>API Reference</h2>
-            <h3>SIMPLE_DIFF</h3>
-            <table>
-                <thead>
-                    <tr><th>Feature</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><code class="inline-code">make</code></td><td>Create instance</td></tr>
-                    <!-- TODO: Add more features -->
-                </tbody>
-            </table>
-        </section>
+                <h3>Builder Pattern Configuration</h3>
+<pre><code>local
+    l_diff: SIMPLE_DIFF
+do
+    create l_diff.make
+    l_diff.set_context_lines (5)
+         .set_ignore_whitespace (True)
+         .set_ignore_case (True)
+end</code></pre>
+            </section>
 
-        <section id="testing">
-            <h2>Testing</h2>
-            <p>Run the test suite:</p>
-<pre><code>cd simple_diff
-ec.exe -batch -config simple_diff.ecf -target simple_diff_tests -c_compile
-./EIFGENs/simple_diff_tests/F_code/simple_diff.exe</code></pre>
-        </section>
+            <section id="features">
+                <h2>Features</h2>
+                <ul>
+                    <li><strong>Myers Diff Algorithm</strong> - Produces minimal edit scripts via LCS</li>
+                    <li><strong>String/File/Directory Diffing</strong> - Compare any text source</li>
+                    <li><strong>Multiple Renderers</strong> - Unified, side-by-side, HTML, JSON</li>
+                    <li><strong>Patch Operations</strong> - Apply, reverse, dry-run with reject file support</li>
+                    <li><strong>Builder Pattern</strong> - Fluent API for configuration</li>
+                    <li>Design by Contract throughout</li>
+                    <li>Void-safe implementation</li>
+                    <li>SCOOP-compatible</li>
+                </ul>
+            </section>
+
+            <section id="api-reference">
+                <h2>API Reference</h2>
+
+                <h3>SIMPLE_DIFF (Facade)</h3>
+                <table>
+                    <thead>
+                        <tr><th>Feature</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>make</code></td><td>Create with default settings (3 context lines)</td></tr>
+                        <tr><td><code>set_context_lines (n)</code></td><td>Set context lines around changes</td></tr>
+                        <tr><td><code>set_ignore_whitespace (b)</code></td><td>Ignore whitespace differences</td></tr>
+                        <tr><td><code>set_ignore_case (b)</code></td><td>Ignore case differences</td></tr>
+                        <tr><td><code>diff_strings (s, t)</code></td><td>Compare two strings</td></tr>
+                        <tr><td><code>diff_files (p1, p2)</code></td><td>Compare two files</td></tr>
+                        <tr><td><code>diff_directories (d1, d2)</code></td><td>Compare directories recursively</td></tr>
+                        <tr><td><code>apply_patch (diff, file)</code></td><td>Apply a diff to a file</td></tr>
+                        <tr><td><code>reverse_patch (diff, file)</code></td><td>Unapply a patch</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>DIFF_RESULT</h3>
+                <table>
+                    <thead>
+                        <tr><th>Feature</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>is_identical</code></td><td>True if no differences</td></tr>
+                        <tr><td><code>has_changes</code></td><td>True if differences exist</td></tr>
+                        <tr><td><code>hunk_count</code></td><td>Number of change hunks</td></tr>
+                        <tr><td><code>additions_total</code></td><td>Total added lines</td></tr>
+                        <tr><td><code>deletions_total</code></td><td>Total deleted lines</td></tr>
+                        <tr><td><code>to_unified</code></td><td>Render as unified diff</td></tr>
+                        <tr><td><code>to_side_by_side (width)</code></td><td>Render side-by-side</td></tr>
+                        <tr><td><code>to_html</code></td><td>Render as HTML</td></tr>
+                        <tr><td><code>to_json</code></td><td>Render as JSON</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Class Structure</h3>
+                <table>
+                    <thead>
+                        <tr><th>Class</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>SIMPLE_DIFF</code></td><td>Facade - main entry point</td></tr>
+                        <tr><td><code>DIFF_ENGINE</code></td><td>Myers algorithm implementation</td></tr>
+                        <tr><td><code>DIFF_RESULT</code></td><td>Contains diff hunks and metadata</td></tr>
+                        <tr><td><code>DIFF_HUNK</code></td><td>Single contiguous change block</td></tr>
+                        <tr><td><code>DIFF_LINE</code></td><td>Single line with status</td></tr>
+                        <tr><td><code>DIFF_RENDERER</code></td><td>Output formatting</td></tr>
+                        <tr><td><code>PATCH_APPLIER</code></td><td>Patch application logic</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="installation">
+                <h2>Installation</h2>
+                <p>Add to your ECF file:</p>
+<pre><code>&lt;library name="simple_diff" location="$SIMPLE_LIBS/simple_diff/simple_diff.ecf"/&gt;</code></pre>
+            </section>
+        </div>
     </main>
 
     <footer>
-        <p><strong>simple_diff</strong> is part of the <a href="https://github.com/simple-eiffel">simple_*</a> ecosystem</p>
-        <p>Copyright &copy; 2024-2025 Larry Rix. MIT License.</p>
+        <div class="container">
+            <p>&copy; 2026 Simple Eiffel. <a href="https://github.com/simple-eiffel">GitHub</a></p>
+        </div>
     </footer>
 </body>
 </html>

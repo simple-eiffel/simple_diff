@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 			failed := 0
 
 			run_lib_tests
+			run_adversarial_tests
+			run_stress_tests
 
 			print ("%N========================%N")
 			print ("Results: " + passed.out + " passed, " + failed.out + " failed%N")
@@ -86,9 +88,55 @@ feature {NONE} -- Test Runners
 			run_test (agent lib_tests.test_multiline_complex, "test_multiline_complex")
 		end
 
+	run_adversarial_tests
+			-- Run ADVERSARIAL_TESTS test cases.
+		do
+			create adversarial_tests
+
+			print ("%N=== Input Attack Tests ===%N")
+			run_test (agent adversarial_tests.test_null_byte_in_content, "test_null_byte_in_content")
+			run_test (agent adversarial_tests.test_control_characters, "test_control_characters")
+			run_test (agent adversarial_tests.test_very_long_line, "test_very_long_line")
+			run_test (agent adversarial_tests.test_many_lines, "test_many_lines")
+
+			print ("%N=== Output Attack Tests ===%N")
+			run_test (agent adversarial_tests.test_html_injection_content, "test_html_injection_content")
+			run_test (agent adversarial_tests.test_json_special_chars, "test_json_special_chars")
+			run_test (agent adversarial_tests.test_unicode_content, "test_unicode_content")
+
+			print ("%N=== State Attack Tests ===%N")
+			run_test (agent adversarial_tests.test_reuse_after_error, "test_reuse_after_error")
+			run_test (agent adversarial_tests.test_multiple_diffs_same_instance, "test_multiple_diffs_same_instance")
+
+			print ("%N=== Edge Case Tests ===%N")
+			run_test (agent adversarial_tests.test_only_newlines, "test_only_newlines")
+			run_test (agent adversarial_tests.test_trailing_newline_difference, "test_trailing_newline_difference")
+			run_test (agent adversarial_tests.test_identical_large_files, "test_identical_large_files")
+
+			print ("%N=== Patch Attack Tests ===%N")
+			run_test (agent adversarial_tests.test_patch_context_mismatch, "test_patch_context_mismatch")
+			run_test (agent adversarial_tests.test_reverse_patch, "test_reverse_patch")
+		end
+
+	run_stress_tests
+			-- Run STRESS_TESTS test cases.
+		do
+			create stress_tests
+
+			print ("%N=== Volume Tests ===%N")
+			run_test (agent stress_tests.test_1000_lines, "test_1000_lines")
+			run_test (agent stress_tests.test_2000_lines, "test_2000_lines")
+			run_test (agent stress_tests.test_5000_lines, "test_5000_lines")
+
+			print ("%N=== Worst Case Tests ===%N")
+			run_test (agent stress_tests.test_completely_different_1000, "test_completely_different_1000")
+		end
+
 feature {NONE} -- Implementation
 
 	lib_tests: LIB_TESTS
+	adversarial_tests: ADVERSARIAL_TESTS
+	stress_tests: STRESS_TESTS
 
 	passed: INTEGER
 	failed: INTEGER
