@@ -79,6 +79,8 @@ feature -- Operations
 
 	apply (a_diff: DIFF_RESULT; a_file_path: STRING)
 			-- Apply diff result to file.
+			-- Sets `has_error` if file not found or hunks failed.
+			-- Sets `has_rejects` if some hunks could not be applied.
 		require
 			diff_not_void: a_diff /= Void
 			path_not_void: a_file_path /= Void
@@ -107,6 +109,9 @@ feature -- Operations
 					write_file (a_file_path, l_result_lines)
 				end
 			end
+		ensure
+			error_or_success: has_error or not has_error
+			rejects_tracked: has_rejects implies rejected_hunks.count > 0
 		end
 
 	apply_to_string (a_diff: DIFF_RESULT; a_content: STRING): STRING
@@ -128,6 +133,7 @@ feature -- Operations
 
 	apply_from_string (a_unified_diff: STRING; a_file_path: STRING)
 			-- Parse and apply unified diff string.
+			-- Sets `has_error` if parsing fails or application fails.
 		require
 			diff_not_void: a_unified_diff /= Void
 			path_not_void: a_file_path /= Void
@@ -141,10 +147,13 @@ feature -- Operations
 			else
 				last_error := "Failed to parse unified diff"
 			end
+		ensure
+			error_on_parse_fail: last_error /= Void implies has_error
 		end
 
 	write_reject_file (a_base_path: STRING)
 			-- Write rejected hunks to .rej file.
+			-- Creates file at `a_base_path` + ".rej"
 		require
 			path_not_void: a_base_path /= Void
 			has_rejects: has_rejects
@@ -160,6 +169,8 @@ feature -- Operations
 				i := i + 1
 			end
 			l_file.close
+		ensure
+			rejects_unchanged: rejected_hunks.count = old rejected_hunks.count
 		end
 
 feature {NONE} -- Implementation

@@ -142,11 +142,13 @@ feature -- Directory diffing
 			l_source_path, l_target_path, l_filename: STRING
 			l_diff: DIFF_RESULT
 			l_value: INTEGER
+			l_sep: STRING
 			i: INTEGER
 		do
 			create Result.make (20)
 			l_source_files := list_files_recursive (a_source_dir)
 			l_target_files := list_files_recursive (a_target_dir)
+			l_sep := operating_environment.directory_separator.out
 
 			-- Build set of all files
 			create l_all_files.make (l_source_files.count + l_target_files.count)
@@ -168,8 +170,8 @@ feature -- Directory diffing
 			from l_all_files.start until l_all_files.after loop
 				l_filename := l_all_files.key_for_iteration
 				l_value := l_all_files.item_for_iteration
-				l_source_path := a_source_dir + "/" + l_filename
-				l_target_path := a_target_dir + "/" + l_filename
+				l_source_path := a_source_dir + l_sep + l_filename
+				l_target_path := a_target_dir + l_sep + l_filename
 				inspect l_value
 				when 1 then
 					-- File only in source (deleted)
@@ -202,6 +204,7 @@ feature -- Patch operations
 
 	apply_patch (a_diff: DIFF_RESULT; a_file_path: STRING)
 			-- Apply a unified diff to a file.
+			-- Sets `has_error` and `last_error` if application fails.
 		require
 			diff_not_void: a_diff /= Void
 			path_not_void: a_file_path /= Void
@@ -213,6 +216,8 @@ feature -- Patch operations
 			if l_applier.has_error then
 				last_error := l_applier.last_error
 			end
+		ensure
+			error_propagated: has_error implies last_error /= Void
 		end
 
 	apply_patch_dry_run (a_diff: DIFF_RESULT; a_file_path: STRING): STRING
@@ -234,6 +239,7 @@ feature -- Patch operations
 
 	reverse_patch (a_diff: DIFF_RESULT; a_file_path: STRING)
 			-- Reverse apply a patch (unapply).
+			-- Sets `has_error` and `last_error` if reversal fails.
 		require
 			diff_not_void: a_diff /= Void
 			path_not_void: a_file_path /= Void
@@ -246,6 +252,8 @@ feature -- Patch operations
 			if l_applier.has_error then
 				last_error := l_applier.last_error
 			end
+		ensure
+			error_propagated: has_error implies last_error /= Void
 		end
 
 feature -- Error handling
@@ -333,7 +341,7 @@ feature {NONE} -- Implementation
 		local
 			l_dir: DIRECTORY
 			l_entries: ARRAYED_LIST [STRING]
-			l_path, l_entry: STRING
+			l_path, l_entry, l_sep: STRING
 			l_file: PLAIN_TEXT_FILE
 			l_sub_dir: DIRECTORY
 			l_sub_files: ARRAYED_LIST [STRING]
@@ -341,6 +349,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (50)
 			create l_dir.make (a_dir)
+			l_sep := operating_environment.directory_separator.out
 			if l_dir.exists then
 				l_dir.open_read
 				l_entries := l_dir.linear_representation
@@ -349,7 +358,7 @@ feature {NONE} -- Implementation
 				from i := 1 until i > l_entries.count loop
 					l_entry := l_entries [i]
 					if not l_entry.same_string (".") and not l_entry.same_string ("..") then
-						l_path := a_dir + "/" + l_entry
+						l_path := a_dir + l_sep + l_entry
 						create l_file.make_with_name (l_path)
 						if l_file.exists and l_file.is_plain then
 							Result.extend (l_entry)
@@ -358,7 +367,7 @@ feature {NONE} -- Implementation
 							if l_sub_dir.exists then
 								l_sub_files := list_files_recursive (l_path)
 								from j := 1 until j > l_sub_files.count loop
-									Result.extend (l_entry + "/" + l_sub_files [j])
+									Result.extend (l_entry + l_sep + l_sub_files [j])
 									j := j + 1
 								end
 							end

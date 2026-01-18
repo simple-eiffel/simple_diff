@@ -294,4 +294,159 @@ feature -- JSON Output Test
 			assert ("has_identical", l_json.has_substring ("is_identical"))
 		end
 
+feature -- Patch Applier Tests
+
+	test_patch_applier_creation
+			-- Test patch applier creation.
+		local
+			l_applier: PATCH_APPLIER
+		do
+			create l_applier.make
+			assert ("not_dry_run", not l_applier.dry_run)
+			assert ("not_reverse", not l_applier.reverse)
+			assert ("no_error", not l_applier.has_error)
+			assert ("no_rejects", not l_applier.has_rejects)
+		end
+
+	test_patch_apply_to_string
+			-- Test applying patch to string content.
+		local
+			l_diff: SIMPLE_DIFF
+			l_result: DIFF_RESULT
+			l_applier: PATCH_APPLIER
+			l_patched: STRING
+		do
+			create l_diff.make
+			-- Create a diff: "hello%Nworld" -> "hello%Nearth"
+			l_result := l_diff.diff_strings ("hello%Nworld", "hello%Nearth")
+
+			-- Apply patch to original string
+			create l_applier.make
+			l_patched := l_applier.apply_to_string (l_result, "hello%Nworld")
+
+			assert ("no_error", not l_applier.has_error)
+			assert ("patched_contains_earth", l_patched.has_substring ("earth"))
+			assert ("patched_no_world", not l_patched.has_substring ("world"))
+		end
+
+	test_patch_applier_dry_run
+			-- Test dry run mode.
+		local
+			l_applier: PATCH_APPLIER
+		do
+			create l_applier.make
+			l_applier.set_dry_run (True)
+			assert ("dry_run_set", l_applier.dry_run)
+		end
+
+	test_patch_applier_reverse
+			-- Test reverse mode setting.
+		local
+			l_applier: PATCH_APPLIER
+		do
+			create l_applier.make
+			l_applier.set_reverse (True)
+			assert ("reverse_set", l_applier.reverse)
+		end
+
+feature -- Edge Case Tests
+
+	test_empty_strings
+			-- Test diffing empty strings.
+		local
+			l_diff: SIMPLE_DIFF
+			l_result: DIFF_RESULT
+		do
+			create l_diff.make
+			l_result := l_diff.diff_strings ("", "")
+			assert ("empty_identical", l_result.is_identical)
+		end
+
+	test_one_empty_string
+			-- Test diffing when one string is empty.
+		local
+			l_diff: SIMPLE_DIFF
+			l_result: DIFF_RESULT
+		do
+			create l_diff.make
+			-- Empty to content = all additions
+			l_result := l_diff.diff_strings ("", "line1%Nline2")
+			assert ("has_changes", l_result.has_changes)
+			assert ("has_additions", l_result.additions_total >= 1)
+
+			-- Content to empty = all deletions
+			l_result := l_diff.diff_strings ("line1%Nline2", "")
+			assert ("has_changes2", l_result.has_changes)
+			assert ("has_deletions", l_result.deletions_total >= 1)
+		end
+
+	test_single_line_change
+			-- Test single line difference.
+		local
+			l_diff: SIMPLE_DIFF
+			l_result: DIFF_RESULT
+		do
+			create l_diff.make
+			l_result := l_diff.diff_strings ("abc", "xyz")
+			assert ("has_changes", l_result.has_changes)
+		end
+
+	test_multiline_complex
+			-- Test complex multi-line diff.
+		local
+			l_diff: SIMPLE_DIFF
+			l_result: DIFF_RESULT
+			l_source, l_target: STRING
+		do
+			create l_diff.make
+			l_source := "line1%Nline2%Nline3%Nline4%Nline5"
+			l_target := "line1%Nmodified%Nline3%Nnew_line%Nline5"
+			l_result := l_diff.diff_strings (l_source, l_target)
+			assert ("has_changes", l_result.has_changes)
+			-- line2 -> modified (1 del, 1 add), line4 -> new_line (1 del, 1 add)
+			assert ("multiple_changes", l_result.additions_total >= 2)
+		end
+
+feature -- Renderer Additional Tests
+
+	test_renderer_side_by_side
+			-- Test side-by-side rendering.
+		local
+			l_result: DIFF_RESULT
+			l_hunk: DIFF_HUNK
+			l_renderer: DIFF_RENDERER
+			l_output: STRING
+		do
+			create l_result.make
+			create l_hunk.make (1, 1)
+			l_hunk.add_removed_line ("old line", 1)
+			l_hunk.add_added_line ("new line", 1)
+			l_result.add_hunk (l_hunk)
+
+			create l_renderer.make
+			l_renderer.set_line_width (80)
+			l_output := l_renderer.render_side_by_side (l_result)
+			assert ("has_separator", l_output.has_substring (" | "))
+			assert ("has_source_header", l_output.has_substring ("Source"))
+		end
+
+	test_renderer_colored
+			-- Test colored console rendering.
+		local
+			l_result: DIFF_RESULT
+			l_hunk: DIFF_HUNK
+			l_renderer: DIFF_RENDERER
+			l_output: STRING
+		do
+			create l_result.make
+			create l_hunk.make (1, 1)
+			l_hunk.add_added_line ("new", 1)
+			l_result.add_hunk (l_hunk)
+
+			create l_renderer.make
+			l_output := l_renderer.render_colored (l_result)
+			-- Should contain ANSI escape codes
+			assert ("has_output", l_output.count > 0)
+		end
+
 end

@@ -91,6 +91,10 @@ feature -- Computation
 
 	compute_diff: DIFF_RESULT
 			-- Compute diff between source and target.
+			-- Uses Myers algorithm via LCS to produce minimal edit script.
+		require
+			source_set: source_lines /= Void
+			target_set: target_lines /= Void
 		local
 			l_lcs: ARRAYED_LIST [TUPLE [source_idx: INTEGER; target_idx: INTEGER]]
 			l_result: DIFF_RESULT
@@ -103,6 +107,10 @@ feature -- Computation
 			Result := l_result
 		ensure
 			result_not_void: Result /= Void
+			identical_if_same: source_lines.count = target_lines.count and then
+				(across 1 |..| source_lines.count as i all
+					source_lines [i.item].same_string (target_lines [i.item])
+				end) implies Result.is_identical
 		end
 
 feature {NONE} -- Implementation

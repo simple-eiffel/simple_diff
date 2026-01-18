@@ -67,9 +67,23 @@ feature {NONE} -- Test Runners
 			print ("%N=== Renderer Tests ===%N")
 			run_test (agent lib_tests.test_renderer_unified, "test_renderer_unified")
 			run_test (agent lib_tests.test_renderer_html, "test_renderer_html")
+			run_test (agent lib_tests.test_renderer_side_by_side, "test_renderer_side_by_side")
+			run_test (agent lib_tests.test_renderer_colored, "test_renderer_colored")
 
 			print ("%N=== JSON Output Test ===%N")
 			run_test (agent lib_tests.test_result_json, "test_result_json")
+
+			print ("%N=== Patch Applier Tests ===%N")
+			run_test (agent lib_tests.test_patch_applier_creation, "test_patch_applier_creation")
+			run_test (agent lib_tests.test_patch_apply_to_string, "test_patch_apply_to_string")
+			run_test (agent lib_tests.test_patch_applier_dry_run, "test_patch_applier_dry_run")
+			run_test (agent lib_tests.test_patch_applier_reverse, "test_patch_applier_reverse")
+
+			print ("%N=== Edge Case Tests ===%N")
+			run_test (agent lib_tests.test_empty_strings, "test_empty_strings")
+			run_test (agent lib_tests.test_one_empty_string, "test_one_empty_string")
+			run_test (agent lib_tests.test_single_line_change, "test_single_line_change")
+			run_test (agent lib_tests.test_multiline_complex, "test_multiline_complex")
 		end
 
 feature {NONE} -- Implementation
