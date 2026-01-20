@@ -86,6 +86,11 @@ feature {NONE} -- Test Runners
 			run_test (agent lib_tests.test_one_empty_string, "test_one_empty_string")
 			run_test (agent lib_tests.test_single_line_change, "test_single_line_change")
 			run_test (agent lib_tests.test_multiline_complex, "test_multiline_complex")
+
+			print ("%N=== Object Comparison Tests (simple_reflection) ===%N")
+			run_test (agent lib_tests.test_diff_objects_equal, "test_diff_objects_equal")
+			run_test (agent lib_tests.test_diff_objects_different, "test_diff_objects_different")
+			run_test (agent lib_tests.test_diff_objects_as_string, "test_diff_objects_as_string")
 		end
 
 	run_adversarial_tests

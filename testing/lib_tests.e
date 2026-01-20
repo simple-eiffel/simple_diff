@@ -449,4 +449,51 @@ feature -- Renderer Additional Tests
 			assert ("has_output", l_output.count > 0)
 		end
 
+feature -- Test: Object Comparison (simple_reflection integration)
+
+	test_diff_objects_equal
+			-- Test comparing equal objects.
+		local
+			l_diff: SIMPLE_DIFF
+			l_person1, l_person2: TEST_PERSON
+			l_diffs: ARRAYED_LIST [TUPLE [field_name: STRING; source_value: STRING; target_value: STRING]]
+		do
+			create l_diff.make
+			create l_person1.make ("John", 30)
+			create l_person2.make ("John", 30)
+			l_diffs := l_diff.diff_objects (l_person1, l_person2)
+			assert ("no differences", l_diffs.is_empty)
+			assert ("objects equal", l_diff.objects_equal (l_person1, l_person2))
+		end
+
+	test_diff_objects_different
+			-- Test comparing different objects.
+		local
+			l_diff: SIMPLE_DIFF
+			l_person1, l_person2: TEST_PERSON
+			l_diffs: ARRAYED_LIST [TUPLE [field_name: STRING; source_value: STRING; target_value: STRING]]
+		do
+			create l_diff.make
+			create l_person1.make ("John", 30)
+			create l_person2.make ("Jane", 25)
+			l_diffs := l_diff.diff_objects (l_person1, l_person2)
+			assert ("has differences", not l_diffs.is_empty)
+			assert ("objects not equal", not l_diff.objects_equal (l_person1, l_person2))
+		end
+
+	test_diff_objects_as_string
+			-- Test human-readable object diff.
+		local
+			l_diff: SIMPLE_DIFF
+			l_person1, l_person2: TEST_PERSON
+			l_output: STRING
+		do
+			create l_diff.make
+			create l_person1.make ("John", 30)
+			create l_person2.make ("Jane", 25)
+			l_output := l_diff.diff_objects_as_string (l_person1, l_person2)
+			assert ("has output", not l_output.is_empty)
+			assert ("contains field info", l_output.has_substring ("Field differences"))
+		end
+
 end

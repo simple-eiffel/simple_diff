@@ -200,6 +200,110 @@ feature -- Directory diffing
 			result_not_void: Result /= Void
 		end
 
+feature -- Object Comparison (simple_reflection integration)
+
+	diff_objects (a_source, a_target: ANY): ARRAYED_LIST [TUPLE [field_name: STRING; source_value: STRING; target_value: STRING]]
+			-- Compare two objects field-by-field using reflection.
+			-- Returns list of differing fields with their values.
+		require
+			source_exists: a_source /= Void
+			target_exists: a_target /= Void
+		local
+			l_source_reflected, l_target_reflected: SIMPLE_REFLECTED_OBJECT
+			l_source_field, l_target_field: SIMPLE_FIELD_INFO
+			l_source_value, l_target_value: STRING
+			l_field_name: STRING
+			i: INTEGER
+		do
+			create Result.make (10)
+			create l_source_reflected.make (a_source)
+			create l_target_reflected.make (a_target)
+
+			from
+				i := 1
+			until
+				i > l_source_reflected.type_info.fields.count
+			loop
+				l_source_field := l_source_reflected.type_info.fields [i]
+				l_field_name := l_source_field.name.to_string_8
+
+				-- Get source value
+				l_source_value := field_value_to_string (l_source_field.value (a_source))
+
+				-- Try to find matching field in target
+				l_target_value := ""
+				if i <= l_target_reflected.type_info.fields.count then
+					l_target_field := l_target_reflected.type_info.fields [i]
+					if l_target_field.name.to_string_8.same_string (l_field_name) then
+						l_target_value := field_value_to_string (l_target_field.value (a_target))
+					end
+				end
+
+				-- Record difference if values differ
+				if not l_source_value.same_string (l_target_value) then
+					Result.extend ([l_field_name, l_source_value, l_target_value])
+				end
+				i := i + 1
+			end
+		ensure
+			result_exists: Result /= Void
+		end
+
+	objects_equal (a_source, a_target: ANY): BOOLEAN
+			-- Are two objects equal (all fields match)?
+		require
+			source_exists: a_source /= Void
+			target_exists: a_target /= Void
+		do
+			Result := diff_objects (a_source, a_target).is_empty
+		end
+
+	diff_objects_as_string (a_source, a_target: ANY): STRING
+			-- Return human-readable diff of two objects.
+		require
+			source_exists: a_source /= Void
+			target_exists: a_target /= Void
+		local
+			l_diffs: ARRAYED_LIST [TUPLE [field_name: STRING; source_value: STRING; target_value: STRING]]
+		do
+			l_diffs := diff_objects (a_source, a_target)
+			create Result.make (100)
+			if l_diffs.is_empty then
+				Result.append ("Objects are equal")
+			else
+				Result.append ("Field differences:%N")
+				across l_diffs as ic loop
+					Result.append ("  ")
+					Result.append (ic.field_name)
+					Result.append (": '")
+					Result.append (ic.source_value)
+					Result.append ("' -> '")
+					Result.append (ic.target_value)
+					Result.append ("'%N")
+				end
+			end
+		ensure
+			result_exists: Result /= Void
+		end
+
+feature {NONE} -- Object Comparison Implementation
+
+	field_value_to_string (a_value: detachable ANY): STRING
+			-- Convert field value to string for comparison.
+		do
+			if a_value = Void then
+				Result := "<void>"
+			elseif attached {BOOLEAN} a_value as l_bool then
+				Result := if l_bool then "true" else "false" end
+			elseif attached {READABLE_STRING_GENERAL} a_value as l_str then
+				Result := l_str.to_string_8
+			else
+				Result := a_value.out
+			end
+		ensure
+			result_exists: Result /= Void
+		end
+
 feature -- Patch operations
 
 	apply_patch (a_diff: DIFF_RESULT; a_file_path: STRING)
