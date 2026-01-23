@@ -39,8 +39,6 @@ feature -- Settings
 
 	set_source (a_lines: ARRAYED_LIST [STRING])
 			-- Set source lines for comparison.
-		require
-			lines_not_void: a_lines /= Void
 		do
 			source_lines := a_lines
 		ensure
@@ -49,8 +47,6 @@ feature -- Settings
 
 	set_target (a_lines: ARRAYED_LIST [STRING])
 			-- Set target lines for comparison.
-		require
-			lines_not_void: a_lines /= Void
 		do
 			target_lines := a_lines
 		ensure
@@ -59,22 +55,20 @@ feature -- Settings
 
 	set_source_from_string (a_text: STRING)
 			-- Set source from text, splitting on newlines.
-		require
-			text_not_void: a_text /= Void
 		do
 			source_lines := split_lines (a_text)
 		ensure
 			source_set: source_lines /= Void
+			empty_text_gives_empty: a_text.is_empty implies source_lines.count = 1
 		end
 
 	set_target_from_string (a_text: STRING)
 			-- Set target from text, splitting on newlines.
-		require
-			text_not_void: a_text /= Void
 		do
 			target_lines := split_lines (a_text)
 		ensure
 			target_set: target_lines /= Void
+			empty_text_gives_empty: a_text.is_empty implies target_lines.count = 1
 		end
 
 	set_context_size (a_size: INTEGER)
@@ -92,9 +86,6 @@ feature -- Computation
 	compute_diff: DIFF_RESULT
 			-- Compute diff between source and target.
 			-- Uses Myers algorithm via LCS to produce minimal edit script.
-		require
-			source_set: source_lines /= Void
-			target_set: target_lines /= Void
 		local
 			l_lcs: ARRAYED_LIST [TUPLE [source_idx: INTEGER; target_idx: INTEGER]]
 			l_result: DIFF_RESULT
@@ -106,11 +97,14 @@ feature -- Computation
 			build_hunks (l_result, l_changes)
 			Result := l_result
 		ensure
-			result_not_void: Result /= Void
+			result_exists: Result /= Void
 			identical_if_same: source_lines.count = target_lines.count and then
 				(across 1 |..| source_lines.count as ic all
 					source_lines [ic.item].same_string (target_lines [ic.item])
 				end) implies Result.is_identical
+			hunks_ordered: across 1 |..| (Result.hunks.count - 1) as ic all
+				Result.hunks [ic.item].source_start <= Result.hunks [ic.item + 1].source_start
+			end
 		end
 
 feature {NONE} -- Implementation

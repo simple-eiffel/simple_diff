@@ -14,6 +14,7 @@
 			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<library name="simple_mml" location="$SIMPLE_EIFFEL/simple_mml/simple_mml.ecf"/>
 		<library name="simple_reflection" location="$SIMPLE_EIFFEL/simple_reflection/simple_reflection.ecf"/>
 		<cluster name="src" location="./src/" recursive="true">
 			<file_rule>

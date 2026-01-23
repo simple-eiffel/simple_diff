@@ -78,9 +78,6 @@ feature -- String diffing
 
 	diff_strings (a_source, a_target: STRING): DIFF_RESULT
 			-- Compare two strings, return DIFF_RESULT.
-		require
-			source_not_void: a_source /= Void
-			target_not_void: a_target /= Void
 		local
 			l_source, l_target: STRING
 		do
@@ -90,7 +87,8 @@ feature -- String diffing
 			engine.set_target_from_string (l_target)
 			Result := engine.compute_diff
 		ensure
-			result_not_void: Result /= Void
+			result_exists: Result /= Void
+			identical_when_same: a_source.same_string (a_target) implies Result.is_identical
 		end
 
 feature -- File diffing
@@ -98,8 +96,8 @@ feature -- File diffing
 	diff_files (a_source_path, a_target_path: STRING): DIFF_RESULT
 			-- Compare two files, return DIFF_RESULT.
 		require
-			source_not_void: a_source_path /= Void
-			target_not_void: a_target_path /= Void
+			source_not_empty: not a_source_path.is_empty
+			target_not_empty: not a_target_path.is_empty
 		local
 			l_source_content, l_target_content: STRING
 		do
@@ -109,16 +107,16 @@ feature -- File diffing
 			Result.set_source_path (a_source_path)
 			Result.set_target_path (a_target_path)
 		ensure
-			result_not_void: Result /= Void
-			source_path_set: Result.source_path /= Void
-			target_path_set: Result.target_path /= Void
+			result_exists: Result /= Void
+			source_path_set: attached Result.source_path
+			target_path_set: attached Result.target_path
+			paths_match: attached Result.source_path as sp implies sp.same_string (a_source_path)
 		end
 
 	diff_file_to_string (a_file_path: STRING; a_content: STRING): DIFF_RESULT
 			-- Compare file to string content.
 		require
-			path_not_void: a_file_path /= Void
-			content_not_void: a_content /= Void
+			path_not_empty: not a_file_path.is_empty
 		local
 			l_file_content: STRING
 		do
@@ -126,7 +124,8 @@ feature -- File diffing
 			Result := diff_strings (l_file_content, a_content)
 			Result.set_source_path (a_file_path)
 		ensure
-			result_not_void: Result /= Void
+			result_exists: Result /= Void
+			source_path_set: attached Result.source_path
 		end
 
 feature -- Directory diffing
@@ -134,8 +133,8 @@ feature -- Directory diffing
 	diff_directories (a_source_dir, a_target_dir: STRING): ARRAYED_LIST [DIFF_RESULT]
 			-- Compare two directories recursively, return list of DIFF_RESULT.
 		require
-			source_not_void: a_source_dir /= Void
-			target_not_void: a_target_dir /= Void
+			source_not_empty: not a_source_dir.is_empty
+			target_not_empty: not a_target_dir.is_empty
 		local
 			l_source_files, l_target_files: ARRAYED_LIST [STRING]
 			l_all_files: HASH_TABLE [INTEGER, STRING]
@@ -205,9 +204,6 @@ feature -- Object Comparison (simple_reflection integration)
 	diff_objects (a_source, a_target: ANY): ARRAYED_LIST [TUPLE [field_name: STRING; source_value: STRING; target_value: STRING]]
 			-- Compare two objects field-by-field using reflection.
 			-- Returns list of differing fields with their values.
-		require
-			source_exists: a_source /= Void
-			target_exists: a_target /= Void
 		local
 			l_source_reflected, l_target_reflected: SIMPLE_REFLECTED_OBJECT
 			l_source_field, l_target_field: SIMPLE_FIELD_INFO
@@ -251,18 +247,14 @@ feature -- Object Comparison (simple_reflection integration)
 
 	objects_equal (a_source, a_target: ANY): BOOLEAN
 			-- Are two objects equal (all fields match)?
-		require
-			source_exists: a_source /= Void
-			target_exists: a_target /= Void
 		do
 			Result := diff_objects (a_source, a_target).is_empty
+		ensure
+			definition: Result = diff_objects (a_source, a_target).is_empty
 		end
 
 	diff_objects_as_string (a_source, a_target: ANY): STRING
 			-- Return human-readable diff of two objects.
-		require
-			source_exists: a_source /= Void
-			target_exists: a_target /= Void
 		local
 			l_diffs: ARRAYED_LIST [TUPLE [field_name: STRING; source_value: STRING; target_value: STRING]]
 		do
@@ -310,8 +302,7 @@ feature -- Patch operations
 			-- Apply a unified diff to a file.
 			-- Sets `has_error` and `last_error` if application fails.
 		require
-			diff_not_void: a_diff /= Void
-			path_not_void: a_file_path /= Void
+			path_not_empty: not a_file_path.is_empty
 		local
 			l_applier: PATCH_APPLIER
 		do
@@ -327,8 +318,7 @@ feature -- Patch operations
 	apply_patch_dry_run (a_diff: DIFF_RESULT; a_file_path: STRING): STRING
 			-- Apply diff in dry-run mode, return result without modifying file.
 		require
-			diff_not_void: a_diff /= Void
-			path_not_void: a_file_path /= Void
+			path_not_empty: not a_file_path.is_empty
 		local
 			l_applier: PATCH_APPLIER
 			l_content: STRING
@@ -345,8 +335,7 @@ feature -- Patch operations
 			-- Reverse apply a patch (unapply).
 			-- Sets `has_error` and `last_error` if reversal fails.
 		require
-			diff_not_void: a_diff /= Void
-			path_not_void: a_file_path /= Void
+			path_not_empty: not a_file_path.is_empty
 		local
 			l_applier: PATCH_APPLIER
 		do

@@ -69,8 +69,6 @@ feature -- Rendering
 
 	render_unified (a_result: DIFF_RESULT): STRING
 			-- Render as unified diff format.
-		require
-			result_not_void: a_result /= Void
 		local
 			i: INTEGER
 		do
@@ -98,13 +96,12 @@ feature -- Rendering
 				i := i + 1
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_exists: Result /= Void
+			has_header: Result.has_substring ("---") and Result.has_substring ("+++")
 		end
 
 	render_side_by_side (a_result: DIFF_RESULT): STRING
 			-- Render as side-by-side columns.
-		require
-			result_not_void: a_result /= Void
 		local
 			l_col_width: INTEGER
 			l_separator: STRING
@@ -136,13 +133,11 @@ feature -- Rendering
 				i := i + 1
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_exists: Result /= Void
 		end
 
 	render_html (a_result: DIFF_RESULT): STRING
 			-- Render as HTML with CSS classes.
-		require
-			result_not_void: a_result /= Void
 		local
 			i, j: INTEGER
 		do
@@ -189,14 +184,14 @@ feature -- Rendering
 
 			Result.append ("</div>%N</body></html>")
 		ensure
-			result_not_void: Result /= Void
+			result_exists: Result /= Void
 			is_html: Result.has_substring ("<html>")
+			has_doctype: Result.has_substring ("<!DOCTYPE")
+			has_style: Result.has_substring ("<style>")
 		end
 
 	render_colored (a_result: DIFF_RESULT): STRING
 			-- Render with ANSI color codes for console.
-		require
-			result_not_void: a_result /= Void
 		local
 			i, j: INTEGER
 		do
@@ -235,7 +230,7 @@ feature -- Rendering
 				i := i + 1
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_exists: Result /= Void
 		end
 
 feature {NONE} -- Implementation

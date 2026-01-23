@@ -82,8 +82,7 @@ feature -- Operations
 			-- Sets `has_error` if file not found or hunks failed.
 			-- Sets `has_rejects` if some hunks could not be applied.
 		require
-			diff_not_void: a_diff /= Void
-			path_not_void: a_file_path /= Void
+			path_not_empty: not a_file_path.is_empty
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_lines: ARRAYED_LIST [STRING]
@@ -116,9 +115,6 @@ feature -- Operations
 
 	apply_to_string (a_diff: DIFF_RESULT; a_content: STRING): STRING
 			-- Apply diff to string content, return result.
-		require
-			diff_not_void: a_diff /= Void
-			content_not_void: a_content /= Void
 		local
 			l_lines: ARRAYED_LIST [STRING]
 			l_result_lines: ARRAYED_LIST [STRING]
@@ -135,8 +131,7 @@ feature -- Operations
 			-- Parse and apply unified diff string.
 			-- Sets `has_error` if parsing fails or application fails.
 		require
-			diff_not_void: a_unified_diff /= Void
-			path_not_void: a_file_path /= Void
+			path_not_empty: not a_file_path.is_empty
 		local
 			l_diff: detachable DIFF_RESULT
 		do
@@ -155,7 +150,7 @@ feature -- Operations
 			-- Write rejected hunks to .rej file.
 			-- Creates file at `a_base_path` + ".rej"
 		require
-			path_not_void: a_base_path /= Void
+			path_not_empty: not a_base_path.is_empty
 			has_rejects: has_rejects
 		local
 			l_file: PLAIN_TEXT_FILE
