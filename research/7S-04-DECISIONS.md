@@ -1,5 +1,8 @@
 # 7S-04-DECISIONS: simple_diff (Retrospective)
 
+
+**Date**: 2026-01-18
+
 ## Key Decisions
 
 This documents the design decisions made during simple_diff development and their rationale.

@@ -1,5 +1,8 @@
 # 7S-02-LANDSCAPE: simple_diff (Retrospective)
 
+
+**Date**: 2026-01-18
+
 ## Landscape Analysis
 
 This documents what landscape research would have revealed before building simple_diff.

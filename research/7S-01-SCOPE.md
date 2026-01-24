@@ -1,5 +1,8 @@
 # 7S-01-SCOPE: simple_diff (Retrospective)
 
+
+**Date**: 2026-01-18
+
 ## Research Context
 This is a **retrospective analysis** of what scope research would have revealed prior to building simple_diff.
 

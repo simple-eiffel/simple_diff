@@ -1,5 +1,8 @@
 # 7S-06-RISKS: simple_diff (Retrospective)
 
+
+**Date**: 2026-01-18
+
 ## Risk Analysis
 
 This documents the risks identified for simple_diff and their mitigations.

@@ -1,5 +1,8 @@
 # 7S-03-REQUIREMENTS: simple_diff (Retrospective)
 
+
+**Date**: 2026-01-18
+
 ## Requirements Analysis
 
 This documents what requirements gathering would have produced before building simple_diff.

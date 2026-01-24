@@ -1,5 +1,8 @@
 # 7S-05-INNOVATIONS: simple_diff (Retrospective)
 
+
+**Date**: 2026-01-18
+
 ## Innovation Analysis
 
 This documents what innovations simple_diff brings to the Eiffel ecosystem.
