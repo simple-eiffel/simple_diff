@@ -13,4 +13,5 @@ Thumbs.db
 
 # Logs
 *.log
-exception_trace.log
+exception_trace.log*.melted
+*.epr
