@@ -28,7 +28,7 @@
 		<description>Test target for simple_diff</description>
 		<root class="TEST_APP" feature="make"/>
 		<library name="testing" location="$ISE_LIBRARY/library/testing/testing.ecf"/>
-		<library name="simple_testing" location="D:\prod\simple_testing\simple_testing.ecf"/>
+		<library name="simple_testing" location="$SIMPLE_EIFFEL/simple_testing/simple_testing.ecf"/>
 		<cluster name="tests" location="./testing/" recursive="true"/>
 	</target>
 </system>
