@@ -239,14 +239,9 @@ feature -- Model Queries
 
 	model_hunks: MML_SEQUENCE [DIFF_HUNK]
 			-- Ordered sequence of all hunks for contract specifications.
-		local
-			i: INTEGER
+			-- Built in one pass: `&' copies the sequence on each element (quadratic).
 		do
-			create Result
-			from i := 1 until i > hunks.count loop
-				Result := Result & hunks [i]
-				i := i + 1
-			end
+			create Result.from_iterable (hunks)
 		ensure
 			count_matches: Result.count = hunks.count
 			elements_match: across 1 |..| hunks.count as ic all Result [ic.item] = hunks [ic.item] end

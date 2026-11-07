@@ -226,14 +226,10 @@ feature -- Model Queries
 
 	model_lines: MML_SEQUENCE [DIFF_LINE]
 			-- Ordered sequence of all lines for contract specifications.
-		local
-			i: INTEGER
+			-- Built in one pass: `&' copies the sequence on each element (quadratic),
+			-- and this query runs inside the postconditions of every add.
 		do
-			create Result
-			from i := 1 until i > lines.count loop
-				Result := Result & lines [i]
-				i := i + 1
-			end
+			create Result.from_iterable (lines)
 		ensure
 			count_matches: Result.count = lines.count
 			elements_match: across 1 |..| lines.count as ic all Result [ic.item] = lines [ic.item] end
